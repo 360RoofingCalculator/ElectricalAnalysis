@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electrical & Energy Analysis Executive Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      .print-break-inside-avoid {
+        break-inside: avoid;
+      }
+      body {
+        background-color: #ffffff;
+        color: #0f172a;
+      }
+      .shadow-xl, .shadow-md, .shadow-sm {
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-inner">
+          <i class="fa-solid fa-bolt-lightning text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Energy & Billing Executive Report
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-700/50">PH Linen Hub Audit</span>
+          </h1>
+          <p class="text-xs text-slate-400">Cell-by-cell verified portfolio ledger (2024 – Oct 2026 YTD)</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2 no-print">
+        <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i class="fa-solid fa-file-csv text-emerald-400"></i> Export CSV
+        </button>
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition">
+          <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Timeline Callout Banner -->
+    <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-slate-950 rounded-2xl p-5 text-white shadow-lg border border-indigo-800/40 relative overflow-hidden">
+      <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="inline-block px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i> Operational & Offloading Audit
+          </span>
+          <h2 class="text-xl font-bold text-white tracking-tight">PH / Hub Station Laundry Load & 2026 Offloading Impact</h2>
+          <p class="text-sm text-slate-300 mt-1 max-w-3xl">
+            <strong>PH / Hub Station</strong> absorbed commercial linen washing and drying for external properties, peaking at <strong>$578.02 (3,040.62 kWh)</strong> in August 2025 and surging again in August–September 2026 (<strong>$521.42 / 2,579.01 kWh</strong> and <strong>$533.13 / 2,637.53 kWh</strong>). After offloading 5 properties in late August and the final 3 properties in early October 2026, October dropped immediately to <strong>$425.69 (-20.2%)</strong> and <strong>2,100.81 kWh (-20.3%)</strong>.
+          </p>
+        </div>
+        <div class="flex flex-row md:flex-col gap-2 shrink-0">
+          <div class="bg-slate-800/80 backdrop-blur rounded-xl p-3 border border-slate-700/60 text-center min-w-[145px]">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wide">Sep 2026 Peak</span>
+            <span class="text-lg font-extrabold text-amber-400">$533.13</span>
+            <span class="text-[10px] text-slate-400 block">2,637.53 kWh</span>
+          </div>
+          <div class="bg-slate-800/80 backdrop-blur rounded-xl p-3 border border-emerald-500/40 text-center min-w-[145px]">
+            <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wide">Oct 2026 Post-Offload</span>
+            <span class="text-lg font-extrabold text-emerald-400">$425.69</span>
+            <span class="text-[10px] text-emerald-300 block">2,100.81 kWh (-20.3%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Dashboard Controls & Filter Bar -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Primary Metric Toggle: Cost ($) vs Usage (kWh) -->
+      <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+        <button id="btnMetricMoney" onclick="setMetric('money')" class="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition bg-white text-indigo-700">
+          <i class="fa-solid fa-dollar-sign mr-1.5 text-emerald-600"></i> Financial Cost ($)
+        </button>
+        <button id="btnMetricKwh" onclick="setMetric('kwh')" class="px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+          <i class="fa-solid fa-bolt mr-1.5 text-amber-500"></i> Power Usage (kWh)
+        </button>
+      </div>
+
+      <!-- Filters: Year & Property View -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Year:</label>
+          <select id="yearSelect" onchange="updateDashboard()" class="bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 px-3 py-1.5 font-medium">
+            <option value="2026" selected>2026 (YTD through Oct)</option>
+            <option value="2025">2025 (Full Year)</option>
+            <option value="2024">2024 (Historical Data)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Focus:</label>
+          <select id="propertySelect" onchange="updateDashboard()" class="bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 px-3 py-1.5 font-medium">
+            <option value="all" selected>All Properties Combined</option>
+            <option value="PH/ Hub Station">PH / Hub Station (Linen Hub)</option>
+            <option value="Luxe">Luxe</option>
+            <option value="Magnolia">Magnolia</option>
+            <option value="Mod-Pod">Mod-Pod</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Executive KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpiGrid">
+      <!-- Card 1 -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500" id="kpi1Label">PH 2026 YTD Spend</span>
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <i class="fa-solid fa-wallet text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-slate-900" id="kpi1Value">$3,886.77</div>
+        <p class="text-xs text-slate-500 mt-1" id="kpi1Sub">Avg $388.68/mo (10 logged mos)</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500" id="kpi2Label">Peak Month (Sep 2026)</span>
+          <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+            <i class="fa-solid fa-arrow-trend-up text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-rose-600" id="kpi2Value">$533.13</div>
+        <p class="text-xs text-slate-500 mt-1" id="kpi2Sub">Peak prior to Oct offload</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500" id="kpi3Label">Latest (Oct 2026)</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i class="fa-solid fa-circle-check text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-emerald-600" id="kpi3Value">$425.69</div>
+        <p class="text-xs text-slate-500 mt-1" id="kpi3Sub">Post-offloading billing cycle</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500" id="kpi4Label">Sep → Oct Change</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i class="fa-solid fa-piggy-bank text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-emerald-600" id="kpi4Value">-$107.44</div>
+        <p class="text-xs text-slate-500 mt-1" id="kpi4Sub">-20.2% change from 2026 peak</p>
+      </div>
+    </div>
+
+    <!-- Charts Row 1: Primary Trends & Portfolio Share -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Trend Line Chart (Span 2 cols) -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base" id="trendChartTitle">Monthly Cost ($) — 2026 YTD</h3>
+              <p class="text-xs text-slate-500" id="trendChartSub">Exact monthly data points (blank cells omitted)</p>
+            </div>
+            <!-- Timeline badges -->
+            <div class="flex items-center gap-1.5 text-[11px] font-medium">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Late Aug 2026: 5 Offloaded
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span class="w-2 h-2 rounded-full bg-indigo-600"></span> Early Oct 2026: 3 Offloaded
+              </span>
+            </div>
+          </div>
+          
+          <div class="h-[330px] w-full relative mt-3">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span> PH / Hub Station</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Luxe</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Magnolia</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-violet-400 inline-block"></span> Mod-Pod</span>
+          </div>
+          <span class="italic font-medium text-slate-400">Nov & Dec 2026 statements pending</span>
+        </div>
+      </div>
+
+      <!-- Donut Portfolio Share (Span 1 col) -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base" id="donutChartTitle">Portfolio Share (2026 YTD)</h3>
+              <p class="text-xs text-slate-500" id="donutChartSub">Share of recorded positive entries</p>
+            </div>
+            <span class="p-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs">
+              <i class="fa-solid fa-chart-pie"></i>
+            </span>
+          </div>
+
+          <div class="h-[260px] w-full relative my-auto flex items-center justify-center">
+            <canvas id="donutChart"></canvas>
+          </div>
+        </div>
+
+        <div class="mt-3 pt-3 border-t border-slate-100 text-xs space-y-1.5" id="donutSummaryText">
+          <!-- Dynamically filled breakdown -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Charts Row 2: Comparative Analysis -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- PH Station 2024 vs 2025 vs 2026 Month-over-Month Comparison -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">PH / Hub Station: Multi-Year Comparison</h3>
+            <p class="text-xs text-slate-500">2024 vs 2025 vs 2026 YTD recorded values</p>
+          </div>
+          <span class="text-xs font-semibold px-2 py-1 rounded bg-slate-100 text-slate-600">2024–2026</span>
+        </div>
+        <div class="h-[260px] w-full relative">
+          <canvas id="phComparisonChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 2026 PH Station Surge & Offload Trajectory -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">PH Station 2026 Surge & Offload Trajectory</h3>
+            <p class="text-xs text-slate-500">Jun–Oct 2026 progression showing peak load and October relief</p>
+          </div>
+          <span class="text-xs font-semibold px-2 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200" id="trajBadge">-20.2% in Oct</span>
+        </div>
+        <div class="h-[260px] w-full relative">
+          <canvas id="waterfallReductionChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Detailed Interactive Data Table -->
+    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">Monthly Billing & Energy Ledger</h3>
+          <p class="text-xs text-slate-500">Exact records from your spreadsheet ("—" indicates blank/unrecorded cells)</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-medium text-slate-500">Viewing:</span>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200" id="currentViewBadge">Financial Cost ($) - Year: 2026 (YTD)</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm" id="dataTable">
+          <thead>
+            <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold tracking-wider">
+              <th class="p-3.5 pl-5">Month</th>
+              <th class="p-3.5 text-right">PH / Hub Station</th>
+              <th class="p-3.5 text-right">Luxe</th>
+              <th class="p-3.5 text-right">Magnolia</th>
+              <th class="p-3.5 text-right">Mod-Pod</th>
+              <th class="p-3.5 text-right">Recorded Subtotal</th>
+              <th class="p-3.5 pr-5 text-center">Status / Operational Note</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-700 font-normal">
+            <!-- Populated via JavaScript -->
+          </tbody>
+          <tfoot id="tableFoot" class="bg-slate-50/80 font-bold border-t border-slate-200 text-slate-900">
+            <!-- Populated via JavaScript -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Executive Talking Points & Data Audit Notes -->
+    <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-6 text-slate-800">
+      <h3 class="text-base font-bold text-indigo-950 flex items-center gap-2 mb-3">
+        <i class="fa-solid fa-lightbulb text-amber-500"></i> Verified Executive Talking Points & Audit Notes
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs leading-relaxed text-slate-700">
+        <div class="bg-white p-4 rounded-xl border border-indigo-100/80 shadow-sm">
+          <div class="font-bold text-slate-900 text-sm mb-1 text-indigo-900">1. Full 10-Month 2026 YTD Tracking</div>
+          Across Jan–Oct 2026, PH / Hub Station totaled <strong>$3,886.77</strong> (<strong>$388.68/mo avg</strong>) and <strong>19,520.99 kWh</strong> (<strong>1,952.10 kWh/mo avg</strong>), peaking in Aug–Sep 2026 at <strong>$521.42</strong> and <strong>$533.13</strong>—below August 2025's <strong>$578.02 / 3,040.62 kWh</strong> peak.
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-indigo-100/80 shadow-sm">
+          <div class="font-bold text-slate-900 text-sm mb-1 text-indigo-900">2. Immediate October 2026 Relief</div>
+          Following the Phase 1 offload (late August) and Phase 2 offload (early October), PH / Hub Station's bill dropped from <strong>$533.13 in September to $425.69 in October (-$107.44 / -20.2%)</strong>, cutting physical consumption by <strong>536.72 kWh (-20.3%)</strong>.
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-indigo-100/80 shadow-sm">
+          <div class="font-bold text-slate-900 text-sm mb-1 text-indigo-900">3. Spreadsheet Audit & Credits</div>
+          <strong>Mod-Pod (Jul–Oct 2025)</strong> shows negative billing credits (<code>-$323.06</code> to <code>-$75.59</code>) despite normal kWh consumption, reflecting solar/net-metering credits. Nov–Dec 2026 statements are pending future billing cycles.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-8 py-4 no-print text-center text-xs text-slate-400">
+    <p>Electrical & Energy Analysis Executive Suite • Verified Portfolio Dataset</p>
+  </footer>
+
+  <!-- JavaScript Code: Exact Dataset from both Table1 ($) and Table2 (KWH) -->
+  <script>
+    const rawData = {
+      // Exact cell-by-cell values from Electrical Bill $ screenshot
+      money: {
+        "PH/ Hub Station": {
+          2024: [null, 131.49, 75.88, 52.97, 270.01, 289.31, 330.33, 359.48, 331.91, 305.13, 211.72, 229.36],
+          2025: [276.59, 295.57, 267.30, 256.34, 320.10, 508.89, 564.36, 578.02, 490.52, 416.57, 363.20, 349.81],
+          2026: [342.73, 335.91, 338.11, 329.84, 375.39, 288.01, 396.54, 521.42, 533.13, 425.69, null, null]
+        },
+        "Luxe": {
+          2024: [null, null, null, null, null, null, null, null, 149.37, 70.39, 80.10, 82.35],
+          2025: [80.20, 91.48, 82.39, 78.82, 99.98, 166.91, 168.71, 199.68, 166.25, -6.30, 49.10, 64.24],
+          2026: [61.70, 76.52, 68.55, 89.68, 143.63, 162.93, 270.60, 199.51, 22.15, 21.28, null, null]
+        },
+        "Magnolia": {
+          2024: [null, 123.63, 82.46, 51.49, 82.46, 121.79, 80.81, 85.49, 100.14, 63.92, 47.26, 94.26],
+          2025: [104.77, 187.73, 111.53, 62.60, 61.03, 60.49, 72.32, 79.15, 55.79, 56.81, 67.80, 92.03],
+          2026: [128.63, 71.30, 56.67, 59.56, 71.18, 87.77, 97.08, 90.84, 75.09, 65.58, null, null]
+        },
+        "Mod-Pod": {
+          2024: [null, null, null, null, 44.48, 81.00, 68.28, 104.56, 66.13, 65.22, 82.98, 103.24],
+          2025: [128.79, 96.50, 106.86, 63.63, 69.41, 82.78, -323.06, -232.53, -144.60, -75.59, 15.21, 95.28],
+          2026: [123.87, 76.10, 66.12, 60.71, 68.93, 94.34, 122.32, 122.04, 109.43, null, null, null]
+        }
+      },
+      // Exact cell-by-cell values from Energy Usage (KWH) screenshot
+      kwh: {
+        "PH/ Hub Station": {
+          2024: [null, null, null, null, null, null, null, 2181.00, 2033.45, 1788.07, 1084.88, 1193.34],
+          2025: [1548.02, 1751.30, 1448.32, 1317.14, 1659.22, 2670.39, 2967.46, 3040.62, 2572.01, 2175.93, 1890.10, 1818.33],
+          2026: [1780.43, 1743.92, 1755.62, 1711.39, 1849.58, 1413.08, 1955.20, 2579.01, 2637.53, 2100.81, null, null]
+        },
+        "Luxe": {
+          2024: [null, null, null, null, null, null, null, null, 86.27, 313.56, 358.86, 372.42],
+          2025: [362.67, 413.79, 372.64, 356.46, 452.30, 755.09, 763.24, 1051.28, 752.10, 444.35, 234.10, 275.28],
+          2026: [263.53, 332.45, 295.30, 393.67, 645.07, 734.86, 1236.40, 905.27, 79.23, 75.15, null, null]
+        },
+        "Magnolia": {
+          2024: [null, null, null, null, null, null, null, null, 480.41, 199.04, 452.10, 514.54],
+          2025: [966.44, 551.35, 284.72, 271.54, 268.74, 289.41, 332.13, 368.68, 243.52, 248.94, 307.93, 437.72],
+          2026: [633.69, 326.58, 248.34, 263.77, 320.03, 400.28, 445.51, 415.22, 338.92, 284.64, null, null]
+        },
+        "Mod-Pod": {
+          2024: [null, null, null, null, null, null, null, 480.52, 308.85, 306.44, 393.77, 489.92],
+          2025: [611.20, 457.90, 509.37, 285.30, 316.42, 388.11, 363.08, 429.66, 415.67, 314.35, 430.99, 455.03],
+          2026: [608.18, 352.38, 298.79, 269.18, 309.05, 432.15, 567.71, 566.36, 505.33, null, null, null]
+        }
+      }
+    };
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    let currentMetric = 'money';
+    let chartInstances = {};
+
+    function sumValid(arr) {
+      return arr.reduce((acc, val) => acc + (val !== null ? val : 0), 0);
+    }
+
+    function countValid(arr) {
+      return arr.filter(val => val !== null).length;
+    }
+
+    function formatVal(val, metric = currentMetric) {
+      if (val === null || val === undefined) return '—';
+      if (metric === 'money') {
+        const sign = val < 0 ? '-' : '';
+        return sign + '$' + Math.abs(Number(val)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      } else {
+        return Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' kWh';
+      }
+    }
+
+    function setMetric(metric) {
+      currentMetric = metric;
+      const btnMoney = document.getElementById('btnMetricMoney');
+      const btnKwh = document.getElementById('btnMetricKwh');
+
+      if (metric === 'money') {
+        btnMoney.className = "px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition bg-white text-indigo-700";
+        btnKwh.className = "px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition";
+      } else {
+        btnKwh.className = "px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition bg-white text-amber-700";
+        btnMoney.className = "px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition";
+      }
+
+      updateDashboard();
+    }
+
+    function updateDashboard() {
+      const year = parseInt(document.getElementById('yearSelect').value);
+      const property = document.getElementById('propertySelect').value;
+
+      document.getElementById('currentViewBadge').innerText = 
+        `${currentMetric === 'money' ? 'Financial Cost ($)' : 'Power Usage (kWh)'} - Year: ${year}${year === 2026 ? ' (YTD)' : ''}`;
+
+      updateKPICards(year);
+      renderTrendChart(year, property);
+      renderDonutChart(year);
+      renderComparisonChart();
+      renderWaterfallChart();
+      renderTable(year);
+    }
+
+    function updateKPICards(yearNum) {
+      const m = currentMetric;
+      const phArr = rawData[m]["PH/ Hub Station"][yearNum];
+      const phTotal = sumValid(phArr);
+      const phCount = countValid(phArr);
+      const phAvg = phCount > 0 ? phTotal / phCount : 0;
+
+      document.getElementById('kpi1Label').innerText = `PH ${yearNum}${yearNum === 2026 ? ' YTD' : ''} ${m === 'money' ? 'Spend' : 'Usage'}`;
+      document.getElementById('kpi1Value').innerText = formatVal(phTotal, m);
+      document.getElementById('kpi1Sub').innerText = `Avg ${formatVal(phAvg, m)}/mo (${phCount} logged mo${phCount === 1 ? '' : 's'})`;
+
+      let peakVal = -Infinity;
+      let peakIdx = -1;
+      phArr.forEach((v, i) => {
+        if (v !== null && v > peakVal) {
+          peakVal = v;
+          peakIdx = i;
+        }
+      });
+
+      let lastVal = null;
+      let lastIdx = -1;
+      for (let i = phArr.length - 1; i >= 0; i--) {
+        if (phArr[i] !== null) {
+          lastVal = phArr[i];
+          lastIdx = i;
+          break;
+        }
+      }
+
+      document.getElementById('kpi2Label').innerText = `Peak Month (${months[peakIdx]} ${yearNum})`;
+      document.getElementById('kpi2Value').innerText = formatVal(peakVal, m);
+      document.getElementById('kpi2Sub').innerText = yearNum === 2026 ? 'Peak prior to Oct offload' : 'Highest monthly PH load';
+
+      document.getElementById('kpi3Label').innerText = `${yearNum === 2026 ? 'Latest' : 'Year-End'} (${months[lastIdx]} ${yearNum})`;
+      document.getElementById('kpi3Value').innerText = formatVal(lastVal, m);
+      document.getElementById('kpi3Sub').innerText = yearNum === 2026 ? 'Post-offloading billing cycle' : 'December closing figure';
+
+      const dropVal = lastVal - peakVal;
+      const dropPct = peakVal > 0 ? ((dropVal / peakVal) * 100).toFixed(1) : 0;
+      document.getElementById('kpi4Label').innerText = `${months[peakIdx]} → ${months[lastIdx]} Change`;
+      document.getElementById('kpi4Value').innerText = (dropVal > 0 ? '+' : '') + formatVal(dropVal, m);
+      document.getElementById('kpi4Sub').innerText = `${dropPct}% change from ${yearNum} peak`;
+    }
+
+    function renderTrendChart(yearNum, property) {
+      const ctx = document.getElementById('trendChart').getContext('2d');
+      if (chartInstances.trend) chartInstances.trend.destroy();
+
+      const m = currentMetric;
+
+      const colors = {
+        "PH/ Hub Station": { border: "#4f46e5", bg: "rgba(79, 70, 229, 0.15)" },
+        "Luxe": { border: "#0284c7", bg: "rgba(2, 132, 199, 0.1)" },
+        "Magnolia": { border: "#10b981", bg: "rgba(16, 185, 129, 0.1)" },
+        "Mod-Pod": { border: "#a855f7", bg: "rgba(168, 85, 247, 0.1)" }
+      };
+
+      let datasets = [];
+
+      if (property === 'all') {
+        for (const [propName, propData] of Object.entries(rawData[m])) {
+          datasets.push({
+            label: propName,
+            data: propData[yearNum],
+            borderColor: colors[propName].border,
+            backgroundColor: colors[propName].bg,
+            borderWidth: propName === "PH/ Hub Station" ? 3.5 : 2,
+            tension: 0.3,
+            spanGaps: false,
+            fill: propName === "PH/ Hub Station",
+            pointRadius: propName === "PH/ Hub Station" ? 5 : 4,
+            pointHoverRadius: 7
+          });
+        }
+      } else {
+        datasets.push({
+          label: property,
+          data: rawData[m][property][yearNum],
+          borderColor: colors[property].border,
+          backgroundColor: colors[property].bg,
+          borderWidth: 3.5,
+          tension: 0.3,
+          spanGaps: false,
+          fill: true,
+          pointRadius: 5
+        });
+      }
+
+      document.getElementById('trendChartTitle').innerText = 
+        `${currentMetric === 'money' ? 'Monthly Cost ($)' : 'Monthly Power Usage (kWh)'} — ${yearNum}${yearNum === 2026 ? ' YTD' : ''}`;
+
+      chartInstances.trend = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { boxWidth: 12, font: { size: 11, family: 'Inter' } }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  if (context.raw === null) return context.dataset.label + ': Not logged';
+                  return context.dataset.label + ': ' + formatVal(context.raw, m);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              grid: { color: '#f1f5f9' },
+              ticks: {
+                callback: function(val) {
+                  return m === 'money' ? '$' + val : val;
+                },
+                font: { size: 10, family: 'Inter' }
+              }
+            },
+            x: {
+              grid: { color: '#f8fafc' },
+              ticks: { font: { size: 11, family: 'Inter' } }
+            }
+          }
+        }
+      });
+    }
+
+    function renderDonutChart(yearNum) {
+      const ctx = document.getElementById('donutChart').getContext('2d');
+      if (chartInstances.donut) chartInstances.donut.destroy();
+
+      const m = currentMetric;
+      document.getElementById('donutChartTitle').innerText = `Portfolio Share (${yearNum}${yearNum === 2026 ? ' YTD' : ''})`;
+
+      const labels = ["PH/ Hub Station", "Luxe", "Magnolia", "Mod-Pod"];
+      const totals = labels.map(prop => {
+        const sum = sumValid(rawData[m][prop][yearNum]);
+        return Math.max(0, sum);
+      });
+
+      const grandTotal = totals.reduce((a, b) => a + b, 0);
+
+      chartInstances.donut = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: totals,
+            backgroundColor: ["#4f46e5", "#0284c7", "#10b981", "#a855f7"],
+            borderWidth: 2,
+            borderColor: '#ffffff',
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: { boxWidth: 10, font: { size: 11, family: 'Inter' } }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const val = context.raw;
+                  const pct = grandTotal > 0 ? ((val / grandTotal) * 100).toFixed(1) : 0;
+                  return ` ${context.label}: ${formatVal(val, m)} (${pct}%)`;
+                }
+              }
+            }
+          },
+          cutout: '68%'
+        }
+      });
+
+      const phPct = grandTotal > 0 ? ((totals[0] / grandTotal) * 100).toFixed(1) : 0;
+      document.getElementById('donutSummaryText').innerHTML = `
+        <div class="flex justify-between items-center py-1">
+          <span class="font-medium text-indigo-900">PH / Hub Station Share:</span>
+          <span class="font-bold text-indigo-700">${phPct}% (${formatVal(totals[0], m)})</span>
+        </div>
+        <div class="flex justify-between items-center text-slate-500 text-[11px]">
+          <span>Combined 3 Other Properties:</span>
+          <span>${(100 - phPct).toFixed(1)}% (${formatVal(grandTotal - totals[0], m)})</span>
+        </div>
+      `;
+    }
+
+    function renderComparisonChart() {
+      const ctx = document.getElementById('phComparisonChart').getContext('2d');
+      if (chartInstances.comparison) chartInstances.comparison.destroy();
+
+      const m = currentMetric;
+
+      chartInstances.comparison = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: '2024',
+              data: rawData[m]["PH/ Hub Station"][2024],
+              backgroundColor: 'rgba(203, 213, 225, 0.85)',
+              borderRadius: 3
+            },
+            {
+              label: '2025',
+              data: rawData[m]["PH/ Hub Station"][2025],
+              backgroundColor: 'rgba(100, 116, 139, 0.85)',
+              borderRadius: 3
+            },
+            {
+              label: '2026 YTD',
+              data: rawData[m]["PH/ Hub Station"][2026],
+              backgroundColor: 'rgba(79, 70, 229, 0.9)',
+              borderRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  if (ctx.raw === null) return ctx.dataset.label + ': Not logged';
+                  return ctx.dataset.label + ': ' + formatVal(ctx.raw, m);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(val) { return m === 'money' ? '$' + val : val; },
+                font: { size: 10 }
+              }
+            },
+            x: { ticks: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    function renderWaterfallChart() {
+      const ctx = document.getElementById('waterfallReductionChart').getContext('2d');
+      if (chartInstances.waterfall) chartInstances.waterfall.destroy();
+
+      const m = currentMetric;
+      const labels = [
+        "Jun 2026",
+        "Jul 2026",
+        "Aug 2026 (5 Offloaded Late Aug)",
+        "Sep 2026 (Pre-Oct Offload Peak)",
+        "Oct 2026 (All 8 Offloaded)"
+      ];
+      const dataPoints = [
+        rawData[m]["PH/ Hub Station"][2026][5],
+        rawData[m]["PH/ Hub Station"][2026][6],
+        rawData[m]["PH/ Hub Station"][2026][7],
+        rawData[m]["PH/ Hub Station"][2026][8],
+        rawData[m]["PH/ Hub Station"][2026][9]
+      ];
+
+      document.getElementById('trajBadge').innerText = m === 'money' ? '-20.2% in Oct' : '-20.3% in Oct';
+
+      chartInstances.waterfall = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: m === 'money' ? 'PH Monthly Bill ($)' : 'PH Usage (kWh)',
+            data: dataPoints,
+            backgroundColor: [
+              'rgba(148, 163, 184, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(245, 158, 11, 0.85)',
+              'rgba(239, 68, 68, 0.85)',
+              'rgba(16, 185, 129, 0.9)'
+            ],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return 'PH Station: ' + formatVal(ctx.raw, m);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(val) { return m === 'money' ? '$' + val : val; },
+                font: { size: 10 }
+              }
+            },
+            x: { ticks: { font: { size: 9.5 } } }
+          }
+        }
+      });
+    }
+
+    function renderTable(yearNum) {
+      const m = currentMetric;
+      const tbody = document.getElementById('tableBody');
+      const tfoot = document.getElementById('tableFoot');
+
+      let rowsHtml = '';
+      let totals = { ph: 0, luxe: 0, mag: 0, mod: 0, portfolio: 0 };
+      let counts = { ph: 0, luxe: 0, mag: 0, mod: 0 };
+
+      const notes2026 = {
+        7: { text: "Late Aug: First 5 properties offloaded", color: "text-amber-800 bg-amber-50 border-amber-200" },
+        8: { text: "Peak 2026 PH load prior to final offload", color: "text-rose-700 bg-rose-50 border-rose-200" },
+        9: { text: m === 'money' ? "Early Oct: Final 3 offloaded (-20.2% PH drop)" : "Early Oct: Final 3 offloaded (-20.3% PH drop)", color: "text-emerald-800 bg-emerald-50 border-emerald-200" },
+        10: { text: "Pending future statement", color: "text-slate-500 bg-slate-100 border-slate-200" },
+        11: { text: "Pending future statement", color: "text-slate-500 bg-slate-100 border-slate-200" }
+      };
+
+      months.forEach((month, idx) => {
+        const ph = rawData[m]["PH/ Hub Station"][yearNum][idx];
+        const luxe = rawData[m]["Luxe"][yearNum][idx];
+        const mag = rawData[m]["Magnolia"][yearNum][idx];
+        const mod = rawData[m]["Mod-Pod"][yearNum][idx];
+
+        const hasAnyData = [ph, luxe, mag, mod].some(v => v !== null);
+        const monthTotal = hasAnyData ? ((ph || 0) + (luxe || 0) + (mag || 0) + (mod || 0)) : null;
+
+        if (ph !== null) { totals.ph += ph; counts.ph++; }
+        if (luxe !== null) { totals.luxe += luxe; counts.luxe++; }
+        if (mag !== null) { totals.mag += mag; counts.mag++; }
+        if (mod !== null) { totals.mod += mod; counts.mod++; }
+        if (monthTotal !== null) { totals.portfolio += monthTotal; }
+
+        let noteHtml = `<span class="text-slate-400 text-xs">Standard Operations</span>`;
+        if (yearNum === 2026 && notes2026[idx]) {
+          noteHtml = `<span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-semibold border ${notes2026[idx].color}">${notes2026[idx].text}</span>`;
+        } else if (!hasAnyData) {
+          noteHtml = `<span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-semibold border text-slate-500 bg-slate-100 border-slate-200">Not recorded in sheet</span>`;
+        } else if (yearNum === 2025 && idx === 7) {
+          noteHtml = `<span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-semibold border text-rose-700 bg-rose-50 border-rose-200">2025 Peak PH Load</span>`;
+        } else if (yearNum === 2025 && m === 'money' && idx >= 6 && idx <= 9) {
+          noteHtml = `<span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-semibold border text-emerald-700 bg-emerald-50 border-emerald-200">Mod-Pod Billing Credit</span>`;
+        }
+
+        rowsHtml += `
+          <tr class="hover:bg-slate-50/80 transition ${!hasAnyData ? 'opacity-60 bg-slate-50/40' : ''}">
+            <td class="p-3 pl-5 font-semibold text-slate-900">${month} ${yearNum}</td>
+            <td class="p-3 text-right font-medium ${idx >= 7 && idx <= 9 && yearNum === 2026 ? 'text-indigo-700 font-bold' : ''}">${formatVal(ph, m)}</td>
+            <td class="p-3 text-right">${formatVal(luxe, m)}</td>
+            <td class="p-3 text-right">${formatVal(mag, m)}</td>
+            <td class="p-3 text-right ${mod !== null && mod < 0 ? 'text-emerald-600 font-medium' : ''}">${formatVal(mod, m)}</td>
+            <td class="p-3 text-right font-bold text-slate-900">${formatVal(monthTotal, m)}</td>
+            <td class="p-3 pr-5 text-center">${noteHtml}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+
+      tfoot.innerHTML = `
+        <tr>
+          <td class="p-3.5 pl-5 uppercase tracking-wider text-xs">${yearNum === 2026 ? 'Logged YTD Total' : 'Recorded Total'}</td>
+          <td class="p-3.5 text-right text-indigo-700">${formatVal(totals.ph, m)}</td>
+          <td class="p-3.5 text-right">${formatVal(totals.luxe, m)}</td>
+          <td class="p-3.5 text-right">${formatVal(totals.mag, m)}</td>
+          <td class="p-3.5 text-right">${formatVal(totals.mod, m)}</td>
+          <td class="p-3.5 text-right text-indigo-950 font-black">${formatVal(totals.portfolio, m)}</td>
+          <td class="p-3.5 pr-5 text-center text-xs text-slate-500">Sum of logged cells</td>
+        </tr>
+        <tr class="bg-slate-100/60 text-xs font-semibold text-slate-600 border-t border-slate-200">
+          <td class="p-3 pl-5 uppercase tracking-wider">Monthly Average</td>
+          <td class="p-3 text-right text-indigo-700">${counts.ph ? formatVal(totals.ph / counts.ph, m) : '—'}</td>
+          <td class="p-3 text-right">${counts.luxe ? formatVal(totals.luxe / counts.luxe, m) : '—'}</td>
+          <td class="p-3 text-right">${counts.mag ? formatVal(totals.mag / counts.mag, m) : '—'}</td>
+          <td class="p-3 text-right">${counts.mod ? formatVal(totals.mod / counts.mod, m) : '—'}</td>
+          <td class="p-3 text-right text-slate-800">—</td>
+          <td class="p-3 pr-5 text-center text-[11px] text-slate-500">Average across logged months only</td>
+        </tr>
+      `;
+    }
+
+    function exportCSV() {
+      const yearNum = parseInt(document.getElementById('yearSelect').value);
+      const m = currentMetric;
+
+      let csv = `Month,PH Hub Station (${m.toUpperCase()}),Luxe,Magnolia,Mod-Pod,Recorded Subtotal\n`;
+
+      months.forEach((month, idx) => {
+        const ph = rawData[m]["PH/ Hub Station"][yearNum][idx];
+        const luxe = rawData[m]["Luxe"][yearNum][idx];
+        const mag = rawData[m]["Magnolia"][yearNum][idx];
+        const mod = rawData[m]["Mod-Pod"][yearNum][idx];
+        const hasAny = [ph, luxe, mag, mod].some(v => v !== null);
+        const sum = hasAny ? ((ph || 0) + (luxe || 0) + (mag || 0) + (mod || 0)).toFixed(2) : '';
+        csv += `${month} ${yearNum},${ph ?? ''},${luxe ?? ''},${mag ?? ''},${mod ?? ''},${sum}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Energy_Billing_Analysis_${yearNum}_${m.toUpperCase()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    window.onload = function() {
+      updateDashboard();
+    };
+  </script>
+</body>
+</html>
